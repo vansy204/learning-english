@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../features/auth/services/auth_service.dart';
 import '../core/theme/app_theme.dart';
+import '../models/word.dart';
+import '../services/vocab_service.dart';
 import 'edit_profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -12,6 +14,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  // Service to fetch vocabulary data
+  final VocabService _vocabService = VocabService();
+
   int _currentStreak = 0;
   int _totalXP = 0;
   int _currentLesson = 1;
@@ -395,7 +400,7 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20),
             child: Text(
-              'English Learning Path',
+              'My Vocabulary', // Changed title
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
@@ -405,12 +410,67 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 16),
 
-          // Learning Path
-          _buildLearningPath(),
+          // NEW: Display the list of words from Firestore
+          _buildWordList(),
 
           const SizedBox(height: 80),
         ],
       ),
+    );
+  }
+
+  // ==================== WORD LIST ====================
+  Widget _buildWordList() {
+    return StreamBuilder<List<Word>>(
+      stream: _vocabService.getWords(),
+      builder: (context, snapshot) {
+        // Handle loading state
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+        // Handle error state
+        if (snapshot.hasError) {
+          debugPrint(snapshot.error.toString());
+          return const Center(child: Text('Something went wrong!'));
+        }
+        // Handle empty state
+        if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(32.0),
+              child: Text('No words found yet. Try adding one!'),
+            ),
+          );
+        }
+
+        // Display the list of words
+        final words = snapshot.data!;
+        return ListView.builder(
+          shrinkWrap: true, // Important for nested scrolling
+          physics: const NeverScrollableScrollPhysics(), // Let the parent scroll
+          itemCount: words.length,
+          itemBuilder: (context, index) {
+            final word = words[index];
+            return Card(
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+              elevation: 2,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              child: ListTile(
+                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                title: Text(
+                  word.word,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text(word.meaning),
+                trailing: Text(
+                  '/${word.ipa}/',
+                  style: TextStyle(color: AppTheme.textGrey),
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
@@ -458,35 +518,35 @@ class _HomeScreenState extends State<HomeScreen> {
                       Text('🌟', style: TextStyle(fontSize: 20)),
                     ],
                   ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: AppTheme.successGreen.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  '0/20 XP',
-                  style: TextStyle(
-                    color: AppTheme.successGreen,
-                    fontWeight: FontWeight.bold,
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: AppTheme.successGreen.withValues(alpha: 0.15),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      '0/20 XP',
+                      style: TextStyle(
+                        color: AppTheme.successGreen,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
+                ],
+              ),
+              const SizedBox(height: 16),
+
+              // Progress bar
+              ClipRRect(
+                borderRadius: BorderRadius.circular(16),
+                child: LinearProgressIndicator(
+                  value: 0.0,
+                  minHeight: 12,
+                  backgroundColor: AppTheme.paleBlue,
+                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.successGreen),
                 ),
               ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Progress bar
-          ClipRRect(
-            borderRadius: BorderRadius.circular(16),
-            child: LinearProgressIndicator(
-              value: 0.0,
-              minHeight: 12,
-              backgroundColor: AppTheme.paleBlue,
-              valueColor: AlwaysStoppedAnimation<Color>(AppTheme.successGreen),
-            ),
-          ),
-          const SizedBox(height: 12),
+              const SizedBox(height: 12),
 
               Text(
                 'Complete lessons to reach your daily goal!',
@@ -499,7 +559,9 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // ==================== LEARNING PATH ====================
+  // ==================== (Old) LEARNING PATH WIDGETS ====================
+  // I've kept these here in case you want to use them later.
+
   Widget _buildLearningPath() {
     return Column(
       children: [
