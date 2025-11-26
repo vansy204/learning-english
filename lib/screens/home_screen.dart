@@ -109,7 +109,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: (photoUrl == null || photoUrl.isEmpty)
                       ? Center(
                           child: Text(
-                            user?.displayName?.substring(0, 1).toUpperCase() ?? 'U',
+                            user?.displayName?.substring(0, 1).toUpperCase() ??
+                                'U',
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
@@ -207,9 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Container(
                 width: double.infinity,
                 padding: EdgeInsets.fromLTRB(24, 60, 24, 24),
-                decoration: BoxDecoration(
-                  color: AppTheme.primaryBlue,
-                ),
+                decoration: BoxDecoration(color: AppTheme.primaryBlue),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -231,7 +230,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: (photoUrl == null || photoUrl.isEmpty)
                           ? Center(
                               child: Text(
-                                user?.displayName?.substring(0, 1).toUpperCase() ??
+                                user?.displayName
+                                        ?.substring(0, 1)
+                                        .toUpperCase() ??
                                     'U',
                                 style: TextStyle(
                                   fontSize: 28,
@@ -447,16 +448,22 @@ class _HomeScreenState extends State<HomeScreen> {
         final words = snapshot.data!;
         return ListView.builder(
           shrinkWrap: true, // Important for nested scrolling
-          physics: const NeverScrollableScrollPhysics(), // Let the parent scroll
+          physics:
+              const NeverScrollableScrollPhysics(), // Let the parent scroll
           itemCount: words.length,
           itemBuilder: (context, index) {
             final word = words[index];
             return Card(
               margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
               elevation: 2,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               child: ListTile(
-                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 10,
+                ),
                 title: Text(
                   word.word,
                   style: const TextStyle(fontWeight: FontWeight.bold),
@@ -543,7 +550,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   value: 0.0,
                   minHeight: 12,
                   backgroundColor: AppTheme.paleBlue,
-                  valueColor: AlwaysStoppedAnimation<Color>(AppTheme.successGreen),
+                  valueColor: AlwaysStoppedAnimation<Color>(
+                    AppTheme.successGreen,
+                  ),
                 ),
               ),
               const SizedBox(height: 12),
@@ -722,53 +731,56 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                     child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Lesson $lessonNumber',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: AppTheme.textGrey,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        if (isActive)
-                          Container(
-                            margin: EdgeInsets.only(left: 8),
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 2,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppTheme.primaryBlue.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              'Current',
+                        Row(
+                          children: [
+                            Text(
+                              'Lesson $lessonNumber',
                               style: TextStyle(
-                                fontSize: 10,
-                                color: AppTheme.primaryBlue,
-                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                                color: AppTheme.textGrey,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
+                            if (isActive)
+                              Container(
+                                margin: EdgeInsets.only(left: 8),
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: AppTheme.primaryBlue.withOpacity(0.1),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  'Current',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: AppTheme.primaryBlue,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          title,
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: isLocked ? Colors.grey : AppTheme.textDark,
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: isLocked ? Colors.grey : AppTheme.textDark,
-                      ),
-                    ),
+                        ),
                         const SizedBox(height: 2),
                         Text(
                           subtitle,
-                          style: TextStyle(fontSize: 13, color: AppTheme.textGrey),
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: AppTheme.textGrey,
+                          ),
                         ),
                       ],
                     ),
@@ -892,7 +904,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: (photoUrl == null || photoUrl.isEmpty)
                           ? Center(
                               child: Text(
-                                user?.displayName?.substring(0, 1).toUpperCase() ??
+                                user?.displayName
+                                        ?.substring(0, 1)
+                                        .toUpperCase() ??
                                     'U',
                                 style: TextStyle(
                                   fontSize: 40,
