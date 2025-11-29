@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import '../features/auth/services/auth_service.dart';
 import '../features/auth/services/pin_security_service.dart';
+import '../utils/animations.dart';
 import 'login_screen.dart';
 import 'home_screen.dart';
 import 'pin_verification_screen.dart';
@@ -78,10 +79,46 @@ class _AuthWrapperState extends State<AuthWrapper> with WidgetsBindingObserver {
     return StreamBuilder<User?>(
       stream: authService.authStateChanges,
       builder: (context, snapshot) {
-        // Đang loading
+        // Đang loading - with animated loading indicator
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            backgroundColor: Colors.white,
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  FloatingAnimation(
+                    offset: 20.0,
+                    child: Container(
+                      width: 120,
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF5EB1FF).withValues(alpha: 0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation(Color(0xFF5EB1FF)),
+                          strokeWidth: 4,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  FadeInAnimation(
+                    delay: const Duration(milliseconds: 300),
+                    child: Text(
+                      'Loading your learning journey...',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: const Color(0xFF94A3B8),
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
           );
         }
 
@@ -103,8 +140,10 @@ class _AuthWrapperState extends State<AuthWrapper> with WidgetsBindingObserver {
             });
           }
 
-          // Show HomeScreen (PIN verification will overlay if needed)
-          return const HomeScreen();
+          // Show HomeScreen with animation (PIN verification will overlay if needed)
+          return FadeInAnimation(
+            child: const HomeScreen(),
+          );
         }
 
         // Reset flags when user logs out

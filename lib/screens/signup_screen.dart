@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../features/auth/services/auth_service.dart';
 import '../core/theme/app_theme.dart';
+import '../utils/animations.dart';
+import '../widgets/animated_components.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);

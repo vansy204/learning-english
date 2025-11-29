@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../features/auth/services/auth_service.dart';
 import '../core/theme/app_theme.dart';
+import '../utils/animations.dart';
+import '../widgets/animated_components.dart';
 import 'signup_screen.dart';
 import 'forgot_password_screen.dart';
 import 'home_screen.dart';
@@ -155,46 +157,61 @@ class _LoginScreenState extends State<LoginScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Fun mascot area with emoji
+                      // Fun mascot area with emoji - ANIMATED
                       Center(
                         child: Column(
                           children: [
-                            // Main mascot
-                            Container(
-                              width: 140,
-                              height: 140,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(36),
-                                border: Border.all(
-                                  color: AppTheme.primaryBlue,
-                                  width: 4,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: AppTheme.primaryBlue.withValues(
-                                      alpha: 0.2,
+                            // Main mascot with floating animation
+                            ScaleInAnimation(
+                              duration: const Duration(milliseconds: 800),
+                              child: FloatingAnimation(
+                                duration: const Duration(seconds: 4),
+                                offset: 15.0,
+                                child: Container(
+                                  width: 140,
+                                  height: 140,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(36),
+                                    border: Border.all(
+                                      color: AppTheme.primaryBlue,
+                                      width: 4,
                                     ),
-                                    blurRadius: 20,
-                                    offset: Offset(0, 8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: AppTheme.primaryBlue.withValues(
+                                          alpha: 0.2,
+                                        ),
+                                        blurRadius: 20,
+                                        offset: Offset(0, 8),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              child: Center(
-                                child: Text(
-                                  '🎓',
-                                  style: TextStyle(fontSize: 70),
+                                  child: Center(
+                                    child: Text(
+                                      '🎓',
+                                      style: TextStyle(fontSize: 70),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 8),
-                            // Small floating emoji
+                            // Small floating emoji - ANIMATED
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                _buildSmallFloatingEmoji('📖', -20, -10),
+                                FloatingAnimation(
+                                  duration: const Duration(seconds: 3),
+                                  offset: 12.0,
+                                  child: _buildSmallFloatingEmoji('📖', -20, -10),
+                                ),
                                 const SizedBox(width: 120),
-                                _buildSmallFloatingEmoji('✏️', 20, -15),
+                                FloatingAnimation(
+                                  duration: const Duration(seconds: 3),
+                                  offset: 12.0,
+                                  child: _buildSmallFloatingEmoji('✏️', 20, -15),
+                                ),
                               ],
                             ),
                           ],
@@ -202,81 +219,97 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 32),
 
-                      // Title
-                      Text(
-                        'Welcome Back!',
-                        style: Theme.of(context).textTheme.displaySmall
-                            ?.copyWith(
-                              color: AppTheme.textDark,
-                              fontWeight: FontWeight.bold,
-                            ),
-                        textAlign: TextAlign.center,
+                      // Title - ANIMATED
+                      SlideInAnimation(
+                        direction: SlideDirection.fromTop,
+                        duration: const Duration(milliseconds: 700),
+                        child: Text(
+                          'Welcome Back!',
+                          style: Theme.of(context).textTheme.displaySmall
+                              ?.copyWith(
+                                color: AppTheme.textDark,
+                                fontWeight: FontWeight.bold,
+                              ),
+                          textAlign: TextAlign.center,
+                        ),
                       ),
                       const SizedBox(height: 8),
 
-                      Text(
-                        'Sign in to continue learning',
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppTheme.textGrey,
+                      // Subtitle - ANIMATED
+                      SlideInAnimation(
+                        direction: SlideDirection.fromTop,
+                        duration: const Duration(milliseconds: 700),
+                        delay: const Duration(milliseconds: 150),
+                        child: Text(
+                          'Sign in to continue learning',
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: AppTheme.textGrey,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                       const SizedBox(height: 40),
 
-                      // Email Field
-                      TextFormField(
-                        controller: _emailController,
-                        keyboardType: TextInputType.emailAddress,
-                        textInputAction: TextInputAction.next,
-                        decoration: InputDecoration(
-                          labelText: 'Email',
-                          hintText: 'your.email@example.com',
-                          prefixIcon: Icon(Icons.email_outlined),
+                      // Email Field - ANIMATED
+                      FadeInAnimation(
+                        delay: const Duration(milliseconds: 300),
+                        child: TextFormField(
+                          controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          textInputAction: TextInputAction.next,
+                          decoration: InputDecoration(
+                            labelText: 'Email',
+                            hintText: 'your.email@example.com',
+                            prefixIcon: Icon(Icons.email_outlined),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your email';
+                            }
+                            if (!value.contains('@') || !value.contains('.')) {
+                              return 'Please enter a valid email';
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your email';
-                          }
-                          if (!value.contains('@') || !value.contains('.')) {
-                            return 'Please enter a valid email';
-                          }
-                          return null;
-                        },
                       ),
                       const SizedBox(height: 16),
 
-                      // Password Field
-                      TextFormField(
-                        controller: _passwordController,
-                        obscureText: _obscurePassword,
-                        textInputAction: TextInputAction.done,
-                        onFieldSubmitted: (_) => _handleLogin(),
-                        decoration: InputDecoration(
-                          labelText: 'Password',
-                          hintText: 'Enter your password',
-                          prefixIcon: Icon(Icons.lock_outlined),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscurePassword
-                                  ? Icons.visibility_outlined
-                                  : Icons.visibility_off_outlined,
+                      // Password Field - ANIMATED
+                      FadeInAnimation(
+                        delay: const Duration(milliseconds: 450),
+                        child: TextFormField(
+                          controller: _passwordController,
+                          obscureText: _obscurePassword,
+                          textInputAction: TextInputAction.done,
+                          onFieldSubmitted: (_) => _handleLogin(),
+                          decoration: InputDecoration(
+                            labelText: 'Password',
+                            hintText: 'Enter your password',
+                            prefixIcon: Icon(Icons.lock_outlined),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obscurePassword
+                                    ? Icons.visibility_outlined
+                                    : Icons.visibility_off_outlined,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  _obscurePassword = !_obscurePassword;
+                                });
+                              },
                             ),
-                            onPressed: () {
-                              setState(() {
-                                _obscurePassword = !_obscurePassword;
-                              });
-                            },
                           ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your password';
+                            }
+                            if (value.length < 6) {
+                              return 'Password must be at least 6 characters';
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.isEmpty) {
-                            return 'Please enter your password';
-                          }
-                          if (value.length < 6) {
-                            return 'Password must be at least 6 characters';
-                          }
-                          return null;
-                        },
                       ),
                       const SizedBox(height: 8),
 
@@ -304,27 +337,28 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 24),
 
-                      // Login Button
-                      Consumer<AuthService>(
-                        builder: (context, authService, child) {
-                          return ElevatedButton(
-                            onPressed: authService.isLoading
-                                ? null
-                                : _handleLogin,
-                            child: authService.isLoading
-                                ? SizedBox(
-                                    height: 20,
-                                    width: 20,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                        Colors.white,
+                      // Login Button - ANIMATED
+                      FadeInAnimation(
+                        delay: const Duration(milliseconds: 600),
+                        child: Consumer<AuthService>(
+                          builder: (context, authService, child) {
+                            return AnimatedElevatedButton(
+                              onPressed: authService.isLoading ? () {} : _handleLogin,
+                              child: authService.isLoading
+                                  ? SizedBox(
+                                      height: 20,
+                                      width: 20,
+                                      child: CircularProgressIndicator(
+                                        strokeWidth: 2,
+                                        valueColor: AlwaysStoppedAnimation<Color>(
+                                          Colors.white,
+                                        ),
                                       ),
-                                    ),
-                                  )
-                                : Text('Sign In'),
-                          );
-                        },
+                                    )
+                                  : Text('Sign In'),
+                            );
+                          },
+                        ),
                       ),
                       const SizedBox(height: 32),
 
@@ -379,53 +413,60 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 32),
 
-                      // Sign Up Link với background xanh nhạt
-                      Container(
-                        padding: EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: AppTheme.paleBlue,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Don't have an account? ",
-                              style: TextStyle(
-                                color: AppTheme.textGrey,
-                                fontSize: 14,
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignUpScreen(),
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                'Sign Up',
+                      // Sign Up Link - ANIMATED
+                      FadeInAnimation(
+                        delay: const Duration(milliseconds: 750),
+                        child: Container(
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: AppTheme.paleBlue,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Don't have an account? ",
                                 style: TextStyle(
-                                  color: AppTheme.primaryBlue,
+                                  color: AppTheme.textGrey,
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            ),
-                          ],
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    SlidePageRoute(
+                                      page: const SignUpScreen(),
+                                      duration: const Duration(milliseconds: 500),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  'Sign Up',
+                                  style: TextStyle(
+                                    color: AppTheme.primaryBlue,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                       const SizedBox(height: 24),
 
-                      // Fun motivational quote
-                      AppTheme.infoBox(
-                        icon: Icons.lightbulb_outline,
-                        text: 'Learning a new language opens new worlds! 🌍',
-                        backgroundColor: Colors.white,
-                        iconColor: AppTheme.accentYellow,
-                        textColor: AppTheme.textGrey,
+                      // Fun motivational quote - ANIMATED
+                      FadeInAnimation(
+                        delay: const Duration(milliseconds: 900),
+                        child: AppTheme.infoBox(
+                          icon: Icons.lightbulb_outline,
+                          text: 'Learning a new language opens new worlds! 🌍',
+                          backgroundColor: Colors.white,
+                          iconColor: AppTheme.accentYellow,
+                          textColor: AppTheme.textGrey,
+                        ),
                       ),
                     ],
                   ),

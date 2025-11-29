@@ -13,7 +13,10 @@
       "Bash(dart pub global activate:*)",
       "Bash(~/.pub-cache/bin/flutterfire configure --project=learning-english-7bc45)",
       "Bash(/root/.pub-cache/bin/flutterfire configure --project=learning-english-7bc45)",
-      "Bash(dart pub global list:*)"
+      "Bash(dart pub global list:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(flutter build:*)",
+      "Bash(timeout 120 flutter run:*)"
     ],
     "deny": [],
     "ask": []
