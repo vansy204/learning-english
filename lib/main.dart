@@ -18,11 +18,10 @@ void main() async {
   await dotenv.load(fileName: '.env');
 
   // Khởi tạo Firebase
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // Khởi tạo Hive
   await Hive.initFlutter();
-  Hive.openBox("topic_cache");
+  await Hive.openBox('topicCache');
 
   // Initialize default admin user if not exists
   final adminService = AdminInitializationService();
@@ -43,9 +42,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         // Auth Service with Firestore integration
-        ChangeNotifierProvider(
-          create: (_) => AuthSetup.createAuthService(),
-        ),
+        ChangeNotifierProvider(create: (_) => AuthSetup.createAuthService()),
         // User Profile Service for editing profile
         ChangeNotifierProvider(
           create: (_) => AuthSetup.createUserProfileService(),
