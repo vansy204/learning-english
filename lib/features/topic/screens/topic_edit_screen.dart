@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:learn_english/models/topic.dart';
-import 'package:learn_english/services/topic_service.dart';
+import 'package:learn_english/features/topic/models/topic.dart';
+
+import 'package:learn_english/features/topic/services/topic_service.dart';
 
 class TopicEditScreen extends StatefulWidget {
   final Topic topic;
